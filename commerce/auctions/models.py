@@ -12,11 +12,11 @@ class Auction_Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.TextField(max_length=500)
     starting_bid = models.PositiveIntegerField()
-    image = models.URLField(required=False)
+    image = models.URLField(blank=True)
 
 
 class Bid(models.Model):
     bidder = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="buyer")
     bid = models.PositiveIntegerField()
-    listing = models.ForeignKey(Auction_Listing)
+    listing = models.ForeignKey(Auction_Listing, on_delete=models.CASCADE)
