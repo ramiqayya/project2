@@ -33,9 +33,12 @@ class Bid(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reviewer")
-    listing = models.ManyToManyField(
-        Auction_Listing, blank=True, related_name="comment")
+    listing = models.ForeignKey(
+        Auction_Listing, on_delete=models.CASCADE, related_name="comment")
     comment = models.TextField(max_length=250)
 
     def __str__(self) -> str:
-        return f"comment by {self.user} on {self.listing}"
+        if self.listing.exists():
+            return f"Comment by {self.user} on {self.listing.first()}"
+        else:
+            return f"Comment by {self.user} without a listing association"
