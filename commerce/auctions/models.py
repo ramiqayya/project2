@@ -27,18 +27,15 @@ class Bid(models.Model):
     listing = models.ForeignKey(Auction_Listing, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.bid} by {self.bidder} "
+        return f"{self.bid} by {self.bidder} on {self.listing}"
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(
+    commenter = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="reviewer")
-    listing = models.ForeignKey(
-        Auction_Listing, on_delete=models.CASCADE, related_name="comment")
+    listing=models.ForeignKey(Auction_Listing,on_delete=models.CASCADE)
     comment = models.TextField(max_length=250)
 
-    def __str__(self) -> str:
-        if self.listing.exists():
-            return f"Comment by {self.user} on {self.listing.first()}"
-        else:
-            return f"Comment by {self.user} without a listing association"
+    def __str__(self):
+            return f"Comment by {self.commenter} on {self.listing}"
+       
