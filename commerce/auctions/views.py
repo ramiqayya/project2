@@ -77,7 +77,7 @@ def view_listing(request, listing_id):
             bid = form.cleaned_data["bid"]
 
             listing = Auction_Listing.objects.get(pk=listing_id)
-            if bid > listing.starting_bid:
+            if bid > listing.starting_bid and bid > listing.price:
                 listing.price = bid
                 listing.save()
 
@@ -121,6 +121,12 @@ def view_listing(request, listing_id):
 
 
 def watchlist(request):
+    # print(watch_id)
+    if request.method == "POST":
+        item_id = request.POST.get("item_id")
+        item = Watchlist.objects.get(pk=item_id)
+        item.delete()
+        return HttpResponseRedirect(reverse("watchlist"))
 
     return render(request, "auctions/watchlist.html", {
         "items": Watchlist.objects.filter(user_w=request.user)
