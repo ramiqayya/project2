@@ -9,7 +9,7 @@
 <img src="{{listing.image}}" alt="">
 <a href="{%url 'view_listing' listing.id%}">View listing</a>
 <p>created: {{listing.time}}</p>
-<p>price: ${{listing.starting_bid}}</p>
+<p>price: ${{listing.price}}</p>
 <form action=""></form>
 {%endfor%}
 {% endblock %}

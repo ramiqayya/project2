@@ -2,14 +2,24 @@
 {%block body%}
 <h1>{{listing.title}}</h1>
 <h2>Description: {{listing.description}}</h2>
-<h2>Price: ${{listing.starting_bid}}</h2>
+<h2>Starting: ${{listing.starting_bid}}</h2>
+<h2>Price: ${{listing.price}}</h2>
 <img src="{{listing.image}}" alt="">
 <h4>Time:{{listing.time}}</h4>
 <h4>{{listing.category}}</h4>
 <h4>By: {{listing.seller}}</h4>
-<form action="{}">
+{% if user_l != listing.seller%}
+<form action="{%url 'view_listing' listing.id%}" method="POST">
+    {%csrf_token%}
+    <input type="submit" value="Add to watchlist?">
+</form>
+<form action="{%url 'view_listing' listing.id%}" method="POST">
+    {%csrf_token%}
+    {{form}}
+    <input type="submit" value="Place Bid" id="">
 
 </form>
+{%endif%}
 
 
 

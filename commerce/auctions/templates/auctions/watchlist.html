@@ -1,0 +1,16 @@
+{% extends "auctions/layout.html"%}
+
+{%block body%}
+
+{%for item in items%}
+<h1>{{item.list_item.title}}</h1>
+<p>{{item.list_item.title}}</p>
+<img src="{{item.list_item.image}}" alt="">
+{%empty%}
+<h1>No listings added to the watchlist</h1>
+{%endfor%}
+
+
+
+
+{%endblock%}

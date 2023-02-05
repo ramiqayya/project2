@@ -4,15 +4,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
-from .models import User, Auction_Listing, Bid, Comment
-
-
-class CreateListing(forms.Form):
-    title = forms.CharField(label="name", max_length=64)
-    description = forms.CharField(max_length=500)
-    starting_bid = forms.IntegerField()
-    image = forms.URLField()
-    category = forms.CharField(max_length=64)
+from .models import User, Auction_Listing, Bid, Comment, Watchlist
+from .forms import CreateListing, BidListing
 
 
 def index(request):
@@ -75,13 +68,85 @@ def register(request):
 
 
 def view_listing(request, listing_id):
-    if "l_item" not in request.session:
-        request.session["l_item"] = []
+
+    # print(f"current user is {takeha}")
+    form = BidListing(request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            bid = form.cleaned_data["bid"]
+
+            listing = Auction_Listing.objects.get(pk=listing_id)
+            if bid > listing.starting_bid:
+                listing.price = bid
+                listing.save()
+
+            else:
+                return render(request, "auctions/error.html", {
+                    "message": "Bid must be greater than the current price",
+                    "code": 403
+                })
+
+            new_bid = Bid.objects.create(
+                bidder=request.user, bid=bid, listing=listing)
+            return render(request, "auctions/view_listing.html", {
+                "listing": listing,
+                "user_l": request.user,
+                "form": form,
+                "bid": new_bid
+
+                # "l_items": request.session["l_items"]
+            })
+
+        user = request.user
+        watchlist = Watchlist.objects.filter(user_w=user)
+
+        list_item = Auction_Listing.objects.get(pk=listing_id)
+        check = True
+        for w in watchlist:
+            if list_item.title == w.list_item.title:
+                check = False
+
+        if check == True:
+            Watchlist.objects.create(user_w=user, list_item=list_item)
+
     something = Auction_Listing.objects.get(pk=listing_id)
-    print(something)
+    # print(something.title)
     return render(request, "auctions/view_listing.html", {
         "listing": something,
-        "l_item": request.session["l_item"]
+        "user_l": request.user,
+        "form": form
+        # "l_items": request.session["l_items"]
+    })
+
+
+def watchlist(request):
+
+    return render(request, "auctions/watchlist.html", {
+        "items": Watchlist.objects.filter(user_w=request.user)
+    })
+
+
+def category(request):
+    listings = Auction_Listing.objects.all()
+
+    categories = []
+    for cat in listings:
+        if cat.category not in categories:
+            categories.append(cat.category)
+
+    return render(request, "auctions/categories.html", {
+        "listings": categories
+    })
+
+
+def view_cat(request, category):
+    filtered_listings = Auction_Listing.objects.filter(
+        category=category)
+
+    # print(filtered_listings)
+    return render(request, "auctions/view_cat.html", {
+        "listings": filtered_listings
     })
 
 
