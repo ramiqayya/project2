@@ -6,6 +6,7 @@ from django.urls import reverse
 from django import forms
 from .models import User, Auction_Listing, Bid, Comment, Watchlist
 from .forms import CreateListing, BidListing
+# from django.db.models import Max
 
 
 def index(request):
@@ -69,12 +70,12 @@ def register(request):
 
 def view_listing(request, listing_id):
 
-    # print(f"current user is {takeha}")
     form = BidListing(request.POST or None)
 
     if request.method == "POST":
-        if form.is_valid():
-            bid = form.cleaned_data["bid"]
+        if "place_bid" in request.POST:
+            if form.is_valid():
+                bid = form.cleaned_data["bid"]
 
             listing = Auction_Listing.objects.get(pk=listing_id)
             if bid > listing.starting_bid and bid > listing.price:
@@ -95,20 +96,27 @@ def view_listing(request, listing_id):
                 "form": form,
                 "bid": new_bid
 
-                # "l_items": request.session["l_items"]
+
             })
+        elif "close" in request.POST:
+            list_item = Auction_Listing.objects.get(pk=listing_id)
+            bidder = Bid.objects.filter(
+                listing_id=listing_id).order_by("bid").last()
 
-        user = request.user
-        watchlist = Watchlist.objects.filter(user_w=user)
+            print(bidder)
+        elif "watchlist" in request.POST:
 
-        list_item = Auction_Listing.objects.get(pk=listing_id)
-        check = True
-        for w in watchlist:
-            if list_item.title == w.list_item.title:
-                check = False
+            user = request.user
+            watchlist = Watchlist.objects.filter(user_w=user)
 
-        if check == True:
-            Watchlist.objects.create(user_w=user, list_item=list_item)
+            list_item = Auction_Listing.objects.get(pk=listing_id)
+            check = True
+            for w in watchlist:
+                if list_item.title == w.list_item.title:
+                    check = False
+
+            if check == True:
+                Watchlist.objects.create(user_w=user, list_item=list_item)
 
     something = Auction_Listing.objects.get(pk=listing_id)
     # print(something.title)

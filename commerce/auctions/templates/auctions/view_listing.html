@@ -11,14 +11,20 @@
 {% if user_l != listing.seller%}
 <form action="{%url 'view_listing' listing.id%}" method="POST">
     {%csrf_token%}
-    <input type="submit" value="Add to watchlist?">
+    <input type="submit" value="Add to watchlist?" name="watchlist">
 </form>
 <form action="{%url 'view_listing' listing.id%}" method="POST">
     {%csrf_token%}
     {{form}}
-    <input type="submit" value="Place Bid" id="">
+    <input type="submit" value="Place Bid" name="place_bid">
 
 </form>
+{%else%}
+<form action="{%url 'view_listing' listing.id%}" method="POST">
+    {%csrf_token%}
+    <input type="submit" value="Close" name="close">
+</form>
+
 {%endif%}
 
 
