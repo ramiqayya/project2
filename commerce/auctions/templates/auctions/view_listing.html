@@ -1,33 +1,63 @@
 {% extends "auctions/layout.html" %}
 {%block body%}
-<h1>{{listing.title}}</h1>
-<h2>Description: {{listing.description}}</h2>
-<h2>Starting: ${{listing.starting_bid}}</h2>
-<h2>Price: ${{listing.price}}</h2>
-<img src="{{listing.image}}" alt="">
-<h4>Time:{{listing.time}}</h4>
-<h4>{{listing.category}}</h4>
-<h4>By: {{listing.seller}}</h4>
-{% if user_l != listing.seller%}
-{% if not exist%}
-<form action="{%url 'view_listing' listing.id%}" method="POST">
-    {%csrf_token%}
-    <input type="submit" value="Add to watchlist?" name="watchlist">
-</form>
-{%endif%}
-<form action="{%url 'view_listing' listing.id%}" method="POST">
-    {%csrf_token%}
-    {{form}}
-    <input type="submit" value="Place Bid" name="place_bid">
 
-</form>
-{%else%}
-<form action="{%url 'view_listing' listing.id%}" method="POST">
-    {%csrf_token%}
-    <input type="submit" value="Close" name="close">
-</form>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col">
 
-{%endif%}
+        </div>
+        <div class="col-8">
+            <div class="card mb-3">
+                <img src="{{listing.image}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{listing.title}}</h5>
+                    <p class="card-text">{{listing.description}}</p>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">by: {{listing.seller}}</li>
+
+                        <li class="list-group-item">Starting: ${{listing.starting_bid}}</li>
+                        <li class="list-group-item">price: ${{listing.price}}</li>
+                        <li class="list-group-item">Category: {{listing.category}}</li>
+                        <li class="list-group-item">
+                            {% if user_l != listing.seller%}
+                            {% if not exist%}
+                            <form action="{%url 'view_listing' listing.id%}" method="POST">
+                                {%csrf_token%}
+                                <input type="submit" class="btn btn-primary mb-3" value="Add to watchlist?"
+                                    name="watchlist">
+                            </form>
+                            {%endif%}
+                            <form action="{%url 'view_listing' listing.id%}" method="POST">
+                                {%csrf_token%}
+                                {{form}}
+                                <input type="submit" class="btn btn-primary" value="Place Bid" name="place_bid">
+
+                            </form>
+                            {%else%}
+                            <form action="{%url 'view_listing' listing.id%}" method="POST">
+                                {%csrf_token%}
+                                <input type="submit" value="Close" class="btn btn-primary mb-3" name="close">
+                            </form>
+
+                            {%endif%}
+
+                        </li>
+                        <li class="list-group-item"></li>
+                    </ul>
+                    <p class="card-text"><small class="text-muted">Created: {{listing.time}}</small></p>
+                </div>
+            </div>
+
+
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>
+
+
 
 
 

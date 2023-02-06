@@ -11,4 +11,4 @@ class CreateListing(forms.Form):
 
 class BidListing(forms.Form):
     bid = forms.IntegerField(
-        min_value=0, widget=forms.TextInput(attrs={'placeholder': 'Bid'}))
+        min_value=0, widget=forms.TextInput(attrs={'placeholder': 'Bid', 'class': 'form-control mb-3'}))

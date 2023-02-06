@@ -1,14 +1,30 @@
 {% extends "auctions/layout.html"%}
 
 {%block body%}
-<ul>
-    {%for listing in listings%}
-    <a href="{%url 'view' listing %}">
 
-        <li>{{listing}}</li>
-    </a>
+<div class="container ">
+    <div class="row">
+        <div class="col">
+            <h2 class="mb-3">Catagories</h2>
+            <hr>
+            <ul>
+                {%for listing in listings%}
+                <div class="row mb-3 alert alert-primary cato">
+                    <a class="cato" href="{%url 'view' listing %}">
+
+                        <li>{{listing}}</li>
+                    </a>
+                </div>
+
+                {%endfor%}
+            </ul>
+        </div>
+        <div class="col">
 
 
-    {%endfor%}
-</ul>
+        </div>
+
+    </div>
+</div>
+
 {%endblock%}
