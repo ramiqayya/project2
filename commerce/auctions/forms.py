@@ -17,3 +17,8 @@ class CreateListing(forms.Form):
 class BidListing(forms.Form):
     bid = forms.IntegerField(
         min_value=0, widget=forms.TextInput(attrs={'placeholder': 'Bid', 'class': 'form-control mb-3'}))
+
+
+class Comment_Form(forms.Form):
+    comment = forms.CharField(max_length=250, widget=forms.Textarea(
+        attrs={'placeholder': 'Write a Comment', 'rows': '5', 'class': 'form-control mb-2'}))

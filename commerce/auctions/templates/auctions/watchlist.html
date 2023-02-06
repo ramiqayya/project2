@@ -2,21 +2,51 @@
 
 {%block body%}
 
-{%for item in items%}
-<h1>{{item.list_item.title}}</h1>
-<p>{{item.list_item.description}}</p>
-<p>Starting Price: {{item.list_item.starting_bid}}</p>
-<p>Price: {{item.list_item.price}}</p>
-<img src="{{item.list_item.image}}" alt="">
-<form action="{%url 'watchlist'%}" method="POST">
-    {%csrf_token%}
-    <input type="text" name="item_id" value="{{item.id}}" hidden>
 
-    <input type="submit" value="Remove from Wishlish">
-</form>
+{%for item in items%}
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+        </div>
+        <div class="col-6 mb-3">
+
+            <div class="card" style="width: 40rem;">
+                <img src="{{item.list_item.image}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{item.list_item.title}}</h5>
+                    <p class="card-text">{{item.list_item.description}}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">by: {{item.list_item.seller}}</li>
+                    <li class="list-group-item">Starting Price: ${{item.list_item.starting_bid}}</li>
+                    <li class="list-group-item">price: ${{item.list_item.price}}</li>
+                    <li class="list-group-item">Category: {{item.list_item.category}}</li>
+                </ul>
+                <div class="card-body d-flex justify-content-around">
+                    <a href="{%url 'view_listing' item.list_item.id%}" class="btn btn-info me-3">View listing</a>
+                    <form action="{%url 'watchlist'%}" method="POST">
+                        {%csrf_token%}
+                        <input type="text" name="item_id" value="{{item.id}}" hidden>
+
+                        <input type="submit" class="btn btn-danger" value="Remove from Wishlish">
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>
 {%empty%}
 <h1>No listings added to the watchlist</h1>
 {%endfor%}
+
+
+
 
 
 

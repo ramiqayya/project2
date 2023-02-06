@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
 from .models import User, Auction_Listing, Bid, Comment, Watchlist, Winner
-from .forms import CreateListing, BidListing
+from .forms import CreateListing, BidListing, Comment_Form
 # from django.db.models import Max
 
 
@@ -146,15 +146,46 @@ def view_listing(request, listing_id):
             if check == True:
                 Watchlist.objects.create(user_w=user, list_item=list_item)
             return HttpResponseRedirect(reverse("watchlist"))
+        elif "comment_s" in request.POST:
+            comment_form = Comment_Form(request.POST or None)
+            if comment_form.is_valid():
+                comment = comment_form.cleaned_data["comment"]
+            listing_item = Auction_Listing.objects.get(pk=listing_id)
+            Comment.objects.create(
+                commenter=request.user, listing=listing_item, comment=comment)
+
+            # form = BidListing(request.POST or None)
+            # comment_form = Comment_Form(request.POST or None)
+
+            # something = Auction_Listing.objects.get(pk=listing_id)
+            # comments = Comment.objects.filter(listing_id=listing_id)
+
+            return HttpResponseRedirect(reverse("view_listing", args=[listing_id]))
+
+            # return render(request, ("auctions/view_listing.html", {
+            #     "listing": something,
+            #     "user_l": request.user,
+            #     "form": form,
+            #     "exist": exist,
+            #     "comments": comments,
+            #     "comment_form": comment_form
+            # }))
+
     form = BidListing(request.POST or None)
+    comment_form = Comment_Form(request.POST or None)
 
     something = Auction_Listing.objects.get(pk=listing_id)
+    comments = Comment.objects.filter(listing_id=listing_id)
+
     # print(something.title)
     return render(request, "auctions/view_listing.html", {
         "listing": something,
         "user_l": request.user,
         "form": form,
-        "exist": exist
+        "exist": exist,
+        "comments": comments,
+        "comment_form": comment_form
+
         # "l_items": request.session["l_items"]
     })
 
