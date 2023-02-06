@@ -2,15 +2,19 @@
 
 {% block body %}
 <h2>Active Listings</h2>
-{%for listing in listings%}
+
 <div class="container">
     <div class="row">
         <div class="col">
 
         </div>
-        <div class="col-6 mb-3">
+        <div class="col-6">
 
-            <div class="card" style="width: 40rem;">
+            {%for win in wins%}
+            <h3>Congratulations! you won the auction on {{win.listing_title}} at ${{win.final_price}}</h3>
+            {%endfor%}
+            {%for listing in listings%}
+            <div class="card mb-3" style="width: 40rem;">
                 <img src="{{listing.image}}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{listing.title}}</h5>
@@ -27,7 +31,7 @@
 
                 </div>
             </div>
-
+            {%endfor%}
         </div>
         <div class="col">
 
@@ -36,5 +40,5 @@
 </div>
 
 
-{%endfor%}
+
 {% endblock %}

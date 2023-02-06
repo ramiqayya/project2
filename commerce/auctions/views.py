@@ -7,12 +7,25 @@ from django import forms
 from .models import User, Auction_Listing, Bid, Comment, Watchlist, Winner
 from .forms import CreateListing, BidListing, Comment_Form
 # from django.db.models import Max
+from django.contrib.auth.decorators import login_required
 
 
 def index(request):
 
+    # wins = {'null'}
+
+    if request.user.is_authenticated:
+        wins = Winner.objects.filter(winner=request.user)
+        print(wins)
+        return render(request, "auctions/index.html", {
+            "listings": Auction_Listing.objects.all(),
+            "wins": wins
+
+        })
+
     return render(request, "auctions/index.html", {
         "listings": Auction_Listing.objects.all(),
+        # "wins": wins
 
     })
 
@@ -69,6 +82,7 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
+@login_required(login_url='/login')
 def view_listing(request, listing_id):
 
     watchlists = Watchlist.objects.filter(user_w=request.user)
@@ -170,6 +184,7 @@ def view_listing(request, listing_id):
 
     something = Auction_Listing.objects.get(pk=listing_id)
     comments = Comment.objects.filter(listing_id=listing_id)
+    comments = list(reversed(comments))
 
     # print(something.title)
     return render(request, "auctions/view_listing.html", {
@@ -184,6 +199,7 @@ def view_listing(request, listing_id):
     })
 
 
+@login_required(login_url='/login')
 def watchlist(request):
     # print(watch_id)
     if request.method == "POST":
@@ -197,6 +213,7 @@ def watchlist(request):
     })
 
 
+@login_required(login_url='/login')
 def category(request):
     listings = Auction_Listing.objects.all()
 
@@ -210,6 +227,7 @@ def category(request):
     })
 
 
+@login_required(login_url='/login')
 def view_cat(request, category):
     filtered_listings = Auction_Listing.objects.filter(
         category=category)
@@ -220,6 +238,7 @@ def view_cat(request, category):
     })
 
 
+@login_required(login_url='/login')
 def add(request):
     if request.method == "POST":
         form = CreateListing(request.POST, request.FILES)
