@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django import forms
-from .models import User, Auction_Listing, Bid, Comment, Watchlist
+from .models import User, Auction_Listing, Bid, Comment, Watchlist, Winner
 from .forms import CreateListing, BidListing
 # from django.db.models import Max
 
@@ -120,6 +120,16 @@ def view_listing(request, listing_id):
             list_item = Auction_Listing.objects.get(pk=listing_id)
             bidder = Bid.objects.filter(
                 listing_id=listing_id).order_by("bid").last()
+            print(list_item.title)
+            print(bidder.bidder)
+            if bidder:
+                Winner.objects.create(
+                    listing_title=list_item.title, winner=bidder.bidder, final_price=list_item.price)
+                list_item.delete()
+            else:
+                list_item.delete()
+
+            return HttpResponseRedirect(reverse("index"))
 
         elif "watchlist" in request.POST:
 

@@ -57,7 +57,10 @@ class Watchlist(models.Model):
         return f"item {self.list_item} in {self.user_w} watchlist"
 
 
-# class Winner(models.Model):
-#     listing_title = models.CharField(max_length=64)
-#     winner = models.ForeignKey(User, on_delete=models.CASCADE)
-#     final_price = models.PositiveIntegerField()
+class Winner(models.Model):
+    listing_title = models.CharField(max_length=64)
+    winner = models.ForeignKey(User, on_delete=models.CASCADE)
+    final_price = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.winner} won the auction on {self.listing_title} at ${self.final_price}"
