@@ -55,3 +55,9 @@ class Watchlist(models.Model):
 
     def __str__(self):
         return f"item {self.list_item} in {self.user_w} watchlist"
+
+
+# class Winner(models.Model):
+#     listing_title = models.CharField(max_length=64)
+#     winner = models.ForeignKey(User, on_delete=models.CASCADE)
+#     final_price = models.PositiveIntegerField()

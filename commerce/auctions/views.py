@@ -70,10 +70,27 @@ def register(request):
 
 def view_listing(request, listing_id):
 
-    form = BidListing(request.POST or None)
+    watchlists = Watchlist.objects.filter(user_w=request.user)
+    items = Auction_Listing.objects.filter(pk=listing_id)
+    # print(items[0].title)
+    # print(items[0].description)
+    item_title = items[0].title
+    item_description = items[0].description
+
+    watch_titles = []
+    watch_descriptions = []
+    for watch in watchlists:
+        watch_titles.append(watch.list_item.title)
+        watch_descriptions.append(watch.list_item.description)
+
+    exist = False
+
+    if item_title in watch_titles and item_description in watch_descriptions:
+        exist = True
 
     if request.method == "POST":
         if "place_bid" in request.POST:
+            form = BidListing(request.POST or None)
             if form.is_valid():
                 bid = form.cleaned_data["bid"]
 
@@ -94,7 +111,8 @@ def view_listing(request, listing_id):
                 "listing": listing,
                 "user_l": request.user,
                 "form": form,
-                "bid": new_bid
+                "bid": new_bid,
+                "exist": exist
 
 
             })
@@ -103,7 +121,6 @@ def view_listing(request, listing_id):
             bidder = Bid.objects.filter(
                 listing_id=listing_id).order_by("bid").last()
 
-            print(bidder)
         elif "watchlist" in request.POST:
 
             user = request.user
@@ -117,13 +134,16 @@ def view_listing(request, listing_id):
 
             if check == True:
                 Watchlist.objects.create(user_w=user, list_item=list_item)
+            return HttpResponseRedirect(reverse("watchlist"))
+    form = BidListing(request.POST or None)
 
     something = Auction_Listing.objects.get(pk=listing_id)
     # print(something.title)
     return render(request, "auctions/view_listing.html", {
         "listing": something,
         "user_l": request.user,
-        "form": form
+        "form": form,
+        "exist": exist
         # "l_items": request.session["l_items"]
     })
 
