@@ -3,13 +3,38 @@
 {% block body %}
 <h2>Active Listings</h2>
 {%for listing in listings%}
-<h3>{{listing.title}}</h3>
-<h4>{{listing.description}}</h4>
-<p>by: {{listing.seller}}</p>
-<img src="{{listing.image}}" alt="">
-<a href="{%url 'view_listing' listing.id%}">View listing</a>
-<p>created: {{listing.time}}</p>
-<p>price: ${{listing.price}}</p>
-<form action=""></form>
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+        </div>
+        <div class="col-6 mb-3">
+
+            <div class="card" style="width: 40rem;">
+                <img src="{{listing.image}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">{{listing.title}}</h5>
+                    <p class="card-text">{{listing.description}}</p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">by: {{listing.seller}}</li>
+                    <li class="list-group-item">created: {{listing.time}}</li>
+                    <li class="list-group-item">price: ${{listing.price}}</li>
+                    <li class="list-group-item">Category: {{listing.category}}</li>
+                </ul>
+                <div class="card-body">
+                    <a href="{%url 'view_listing' listing.id%}" class="card-link">View listing</a>
+                    <a href="#" class="card-link">Another link</a>
+                </div>
+            </div>
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>
+
+
 {%endfor%}
 {% endblock %}
