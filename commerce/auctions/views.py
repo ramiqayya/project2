@@ -10,6 +10,7 @@ from .forms import CreateListing, BidListing
 
 
 def index(request):
+
     return render(request, "auctions/index.html", {
         "listings": Auction_Listing.objects.all(),
 
