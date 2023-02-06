@@ -108,15 +108,9 @@ def view_listing(request, listing_id):
 
             new_bid = Bid.objects.create(
                 bidder=request.user, bid=bid, listing=listing)
-            return render(request, "auctions/view_listing.html", {
-                "listing": listing,
-                "user_l": request.user,
-                "form": form,
-                "bid": new_bid,
-                "exist": exist
 
+            return HttpResponseRedirect(reverse("view_listing", args=[listing_id]))
 
-            })
         elif "close" in request.POST:
             list_item = Auction_Listing.objects.get(pk=listing_id)
             bidder = Bid.objects.filter(

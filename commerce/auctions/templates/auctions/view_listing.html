@@ -57,8 +57,15 @@
                 <input type="submit" value="Post" class="btn btn-primary mb-3" name="comment_s">
             </form>
             {%for comment in comments%}
-            <h3>{{comment.comment}}</h3>
-            <p>by: {{comment.commenter}}</p>
+            <div class="card mb-3 bg-info">
+                <div class="card-header">
+                    {{comment.commenter}}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{{comment.comment}}</li>
+
+                </ul>
+            </div>
 
 
             {%endfor%}
