@@ -16,10 +16,19 @@ def index(request):
 
     if request.user.is_authenticated:
         wins = Winner.objects.filter(winner=request.user)
-        print(wins)
+        if request.method == "POST":
+            win_id = int(request.POST.get("win_id"))
+            win = Winner.objects.get(pk=win_id)
+
+            win.delete()
+
+        watchlist_all = Watchlist.objects.filter(user_w=request.user)
+        watch_num = len(watchlist_all)
+
         return render(request, "auctions/index.html", {
             "listings": Auction_Listing.objects.all(),
-            "wins": wins
+            "wins": wins,
+            "watch": watch_num
 
         })
 
@@ -129,8 +138,7 @@ def view_listing(request, listing_id):
             list_item = Auction_Listing.objects.get(pk=listing_id)
             bidder = Bid.objects.filter(
                 listing_id=listing_id).order_by("bid").last()
-            print(list_item.title)
-            print(bidder.bidder)
+
             if bidder:
                 Winner.objects.create(
                     listing_title=list_item.title, winner=bidder.bidder, final_price=list_item.price)
@@ -187,13 +195,16 @@ def view_listing(request, listing_id):
     comments = list(reversed(comments))
 
     # print(something.title)
+    watchlist_all = Watchlist.objects.filter(user_w=request.user)
+    watch_num = len(watchlist_all)
     return render(request, "auctions/view_listing.html", {
         "listing": something,
         "user_l": request.user,
         "form": form,
         "exist": exist,
         "comments": comments,
-        "comment_form": comment_form
+        "comment_form": comment_form,
+        "watch": watch_num
 
         # "l_items": request.session["l_items"]
     })
@@ -208,8 +219,12 @@ def watchlist(request):
         item.delete()
         return HttpResponseRedirect(reverse("watchlist"))
 
+    watchlist_all = Watchlist.objects.filter(user_w=request.user)
+    watch_num = len(watchlist_all)
+
     return render(request, "auctions/watchlist.html", {
-        "items": Watchlist.objects.filter(user_w=request.user)
+        "items": Watchlist.objects.filter(user_w=request.user),
+        "watch": watch_num
     })
 
 
@@ -222,8 +237,12 @@ def category(request):
         if cat.category not in categories:
             categories.append(cat.category)
 
+    watchlist_all = Watchlist.objects.filter(user_w=request.user)
+    watch_num = len(watchlist_all)
+
     return render(request, "auctions/categories.html", {
-        "listings": categories
+        "listings": categories,
+        "watch": watch_num
     })
 
 
@@ -233,8 +252,11 @@ def view_cat(request, category):
         category=category)
 
     # print(filtered_listings)
+    watchlist_all = Watchlist.objects.filter(user_w=request.user)
+    watch_num = len(watchlist_all)
     return render(request, "auctions/view_cat.html", {
-        "listings": filtered_listings
+        "listings": filtered_listings,
+        "watch": watch_num
     })
 
 
@@ -256,7 +278,10 @@ def add(request):
     else:
         form = CreateListing()
 
+    watchlist_all = Watchlist.objects.filter(user_w=request.user)
+    watch_num = len(watchlist_all)
+
     return render(request, "auctions/add_listing.html", {
-        "form": form
+        "form": form,
+        "watch": watch_num
     })
-# This updated version uses a Django form called CreateListing, which should be created in a separate forms.py file in the same directory as the view. The form handles the validation of the form data and makes it easier to manipulate the data before it is saved to the database.

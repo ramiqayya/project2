@@ -11,7 +11,14 @@
         <div class="col-6">
 
             {%for win in wins%}
-            <h3>Congratulations! you won the auction on {{win.listing_title}} at ${{win.final_price}}</h3>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Congratulations!</strong> You won the auction on {{win.listing_title}} at ${{win.final_price}}.
+                <form action="{% url 'index'%}" method="POST">
+                    {%csrf_token%}
+                    <button type="submit" class="btn-close" data-bs-dismiss="alert" name="win_id" value="{{win.id}}"
+                        aria-label="Close"></button>
+                </form>
+            </div>
             {%endfor%}
             {%for listing in listings%}
             <div class="card mb-3" style="width: 40rem;">
@@ -21,9 +28,9 @@
                     <p class="card-text">{{listing.description}}</p>
                 </div>
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">by: {{listing.seller}}</li>
-                    <li class="list-group-item">created: {{listing.time}}</li>
-                    <li class="list-group-item">price: ${{listing.price}}</li>
+                    <li class="list-group-item">By: {{listing.seller}}</li>
+                    <li class="list-group-item">Created: {{listing.time}}</li>
+                    <li class="list-group-item">Price: ${{listing.price}}</li>
                     <li class="list-group-item">Category: {{listing.category}}</li>
                 </ul>
                 <div class="card-body">
