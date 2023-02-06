@@ -1,12 +1,28 @@
 {%extends 'auctions/layout.html'%}
 
 {%block body%}
-<form action="/add" method="POST">
-    {%csrf_token%}
-    {{form}}
-    <input type="submit" value="Add Listing">
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+
+        </div>
+        <div class="col">
+            <h2>Add New Listing</h2>
+            <hr>
+            <form action="/add" method="POST">
+                {%csrf_token%}
+                {{form}}
+                <input type="submit" class="btn btn-success mt-3" value="Add Listing">
 
 
-</form>
+            </form>
+
+        </div>
+        <div class="col">
+
+        </div>
+    </div>
+</div>
 
 {%endblock%}
