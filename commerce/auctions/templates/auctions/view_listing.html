@@ -36,7 +36,7 @@
                             {%else%}
                             <form action="{%url 'view_listing' listing.id%}" method="POST">
                                 {%csrf_token%}
-                                <input type="submit" value="Close" class="btn btn-primary mb-3" name="close">
+                                <input type="submit" value="Close" class="btn btn-danger mb-3" name="close">
                             </form>
 
                             {%endif%}
